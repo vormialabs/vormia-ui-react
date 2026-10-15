@@ -1,0 +1,47 @@
+---
+description: List/table page chrome inside the light workspace — header, toolbar, surface card, slide-over
+globs: reactadmin/**/*.{tsx,ts,css}, reactadmin/**/*.jsx
+alwaysApply: false
+---
+
+# ReactAdmin List Workspace
+
+Distilled from former `vormia-your-customer-hub` Contacts / settings shells. Use **inside** the rounded light workspace from [app-shell.mdc](./app-shell.mdc). Adapt labels to freight (shipments, warehouse, etc.) — do not copy CRM entity names.
+
+## Layer stack (inside workspace)
+
+1. **Section header** — title (or object switcher) · optional view tabs · primary CTA (dark/fg button, not pill-default)
+2. **Surface card** — near-white panel, `rounded-xl` / `--radius-panel`, thin border, soft shadow
+3. **Toolbar** (in card) — local search · view/columns/filters/sort/export · count
+4. **Optional filter chips** — owner/date/status-style dropdowns; keep one row
+5. **Data table** — checkbox column optional · letter avatars OK · uppercase muted column headers
+6. **Footer** — prev/page/next · rows-per-page
+7. **Create/edit** — right `Sheet` (hub Add Contact UX); see [overlays-forms.mdc](./overlays-forms.mdc). Full-page only for multi-step wizards.
+
+## Hierarchy rules
+
+- Global search stays on the **shell top bar**; list search stays in the **surface toolbar**.
+- Prefer one surface card for the table — avoid stacking many floating cards.
+- Primary CTA: high-contrast `foreground` on light (hub used black button); use Veyra primary/marine when product CTA is stronger.
+- Dense but readable: ~12–13px controls, generous workspace padding (~24px), tight toolbar gaps.
+- Tables: shared `ui/table` primitives; charts/dashboards: [charts-tables.mdc](./charts-tables.mdc).
+
+## Example skeleton
+
+```tsx
+<div className="admin-content">
+  <header>{/* title · tabs · Add */}</header>
+  <div className="/* surface card */">
+    <div>{/* list search · filters · count */}</div>
+    <div className="overflow-auto">{/* table */}</div>
+    <footer>{/* pagination */}</footer>
+  </div>
+  {/* Sheet for create/edit */}
+</div>
+```
+
+## Do not
+
+- Rebuild HubSpot/CRM Contacts product UI verbatim.
+- Put global top-bar search inside the table card.
+- Use cards for every metric row when a single surface + table is enough.

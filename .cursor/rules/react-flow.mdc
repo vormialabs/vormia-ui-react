@@ -1,0 +1,63 @@
+---
+description: PHP-friendly React feature flow for Veyra (TanStack Start) — orchestration, forms, toasts, overlays
+globs: reactadmin/**/*.{tsx,ts}
+alwaysApply: false
+---
+
+# ReactAdmin React flow (for PHP / Laravel minds)
+
+Inspiration: [`developer-guide-flow-cursor.md`](../../developer-guide-flow-cursor.md) (Acensure). Adapt to Veyra — do not copy Acensure folders (`src/dev`, `UseApiQuery` names).
+
+## Mental map
+
+| PHP / Laravel | Veyra React |
+| :--- | :--- |
+| Controller | Route / page orchestrator (`routes/*`, `components/admin/admin.tsx`) |
+| Blade / view | Leaf UI under `components/admin/*`, `components/ui/*` |
+| Form Request | Zod (+ react-hook-form when real forms ship) |
+| Eloquent / HTTP client | TanStack Query later; demo data today |
+| `session()->flash()` | `ShowToast` ([Sonner](https://sonner.emilkowal.ski/getting-started)) |
+| Bootstrap modal | **Dialog** (forms), **AlertDialog** (confirm), **Sheet** (side create/edit) |
+
+Path alias: `#/*` → `src/*` (not Acensure `@/`).
+
+## How to structure a feature
+
+1. **Orchestrator** owns filters, open/close overlays, which view is active, and calls mutations/handlers.
+2. **Leaf components** own layout + form fields (e.g. `shipment-form-sheet.tsx`, `overview-dashboard.tsx`).
+3. **Columns / tables** grow into their own files when a page gets heavy.
+4. **Primitives** stay in `components/ui/*` (shadcn + Radix). Shared composites in `components/shared/*`.
+
+## Feedback & overlays
+
+| Need | Tool |
+| :--- | :--- |
+| Success / error after action | `ShowToast.success` / `.error` from `#/lib/toast` |
+| Short create/edit | Right **Sheet** |
+| Form / detail modal | **Dialog** |
+| Destructive confirm | **AlertDialog** (or `ConfirmDialog` wrapper) |
+| Multi-step booking | Full **page** wizard — not a Sheet |
+
+Fire toasts from the **same handler** that finishes the action (create, delete, save) — like flashing after a redirect in Laravel.
+
+## Naming
+
+- Components: `PascalCase` (`ShipmentFormSheet`, `FreightDashboard`)
+- Hooks: `camelCase` `useX` (Veyra style; Acensure’s PascalCase hooks are not the Veyra convention)
+- Mutations (when API lands): `deleteShipmentMutation`, `createOrderMutation`
+- Handlers: `handleCreateShipment`, `onOpenChange`
+
+## Checklist (CRUD-style)
+
+- [ ] Page/orchestrator thin; forms/tables split out if large
+- [ ] Validation via Zod when submitting real data
+- [ ] Overlay role chosen (Sheet / Dialog / AlertDialog)
+- [ ] `ShowToast` on success/error in handlers
+- [ ] No new `useEffect` without asking ([no-useeffect.mdc](./no-useeffect.mdc))
+- [ ] Match local folder style; don’t invent a parallel architecture
+
+## Do / Don’t
+
+**Do:** match nearby files; keep orchestrators orchestration-focused; use `#/` imports; token-based styles.
+
+**Don’t:** mix raw `fetch` with Query in one feature when Query is the standard; put create + table + columns in one huge file; use `useEffect` for toasts or localStorage writes.

@@ -1,0 +1,92 @@
+---
+description: Vormia authenticated app shell — dark default + optional light surround
+globs: reactadmin/**/*.{tsx,ts,css}, reactadmin/**/*.jsx
+alwaysApply: false
+---
+
+# Vormia App Shell
+
+Admin `/app` chrome. Product name **Vormia**. Inner workspace stays white; only sidebar + surround theme.
+
+## Default: dark charcoal (Treatment A)
+
+```text
+dark shell (#303030 surround) — default
+├── flush charcoal sidebar (Vormia blue logo/icon)
+└── main column
+    ├── charcoal top bar (search + language + theme + alerts + avatar)
+    └── rounded white workspace (#FFFFFF, --radius-workspace ~20px) with gutter
+```
+
+Toggle to light (`#FCFCFC` surround). Theme key `reactadmin-shell-theme`: default **dark**; store `light` only when user picks light. Locale: `reactadmin-locale`.
+
+Top bar (right): language → Sun/Moon → alerts → avatar.
+
+```tsx
+<main className="admin-shell" data-theme={shellTheme}>
+```
+
+`data-theme="dark"` remaps shell tokens to charcoal (`#303030` family). Workspace stays `#FFFFFF`. Do not darken tables/panels unless explicitly requested.
+
+## Tokens (`reactadmin/src/styles.css`)
+
+| Token | Light default | Dark (`data-theme="dark"`) |
+| :--- | :--- | :--- |
+| `--app-shell-bg` | `#FCFCFC` (outer: sidebar + top bar + gutter) | `--app-shell-bg-dark` `#303030` |
+| `--app-workspace-bg` / `--background` | `#FFFFFF` (rounded main panel) | stays `#FFFFFF` |
+| `--app-shell-fg` / `-strong` | muted / charcoal text | light gray / near-white |
+| `--app-shell-hover` / `-active` | soft gray pills (`#F0F0F0` / `#E8E8E8`) | charcoal pills |
+
+## Viewport lock + sticky sidebar bottom
+
+Shell is locked to the viewport so the page itself does not scroll:
+
+- `.admin-shell` → `height` / `max-height: 100svh`; `overflow: hidden`
+- `.admin-sidebar` → `height: 100%`; flex column; `overflow: hidden`
+- `.admin-nav` → `flex: 1`; `min-height: 0`; `overflow-y: auto` (long nav scrolls alone)
+- `.sidebar-bottom` → `margin-top: auto`; `flex-shrink: 0`; soft `border-top`; Settings + Not found (404 probe) + Forbidden + Logout
+- Language switcher lives in the top bar (before theme toggle), not in the sidebar
+- No register route; entry `/` redirects to `/login`
+- Only `nav.admin-nav` gets `flex: 1` — never put `flex: 1` on `.sidebar-bottom` even if it reuses `.admin-nav` for button styles
+- `.admin-main` / `.admin-workspace` → `min-height: 0`; `overflow: hidden`
+- `.admin-content` → **only** scroll surface for dashboard content (`overflow-y: auto`)
+
+No JSX reorder required when brand → label → nav → sidebar-bottom are flex siblings.
+
+## Brand
+
+- Wordmark: `/brand/vormia-logo-blue.png`; icon: `/brand/vormia-icon-blue.png`
+- Favicons: `/brand/favicon/`
+- Sidebar: `<Brand size="sm" />` expanded; `<Brand size="sm" variant="icon" />` when collapsed
+- Do not crop, recolour, or stretch
+
+## Structure
+
+```tsx
+<main className="admin-shell" data-theme={shellTheme}>
+  <aside className="admin-sidebar">…brand + nav…</aside>
+  <div className="admin-main">
+    <header className="admin-topbar">…search / theme / alerts / avatar…</header>
+    <div className="admin-workspace">…page content…</div>
+  </div>
+</main>
+```
+
+## Do not
+
+- Apply this theme toggle to marketing/auth pages.
+- Port CRM product nav into Veyra.
+- Invent a third shell treatment outside design-language A/B.
+- Let the whole page (including sidebar) grow with content — keep the viewport lock.
+
+## Theme / locale (SSR)
+
+Use `useSyncExternalStore` from `lib/shell-prefs.ts` (`useShellTheme`, `useLocalePref`) with `getServerSnapshot` defaults (`dark` / `en`). Do not read `localStorage` inside `useState(() => …)` — that causes hydration mismatches.
+
+Ignore Grammarly / extension attrs on `<body>` (`suppressHydrationWarning` on body in `__root.tsx`).
+
+## Error pages
+
+- Unknown routes: root `notFoundComponent` → `NotFoundPage` (404 card)
+- Forbidden: `/forbidden` → `ForbiddenPage` (403 card)
+- Shared layout: `components/admin/status-page.tsx`

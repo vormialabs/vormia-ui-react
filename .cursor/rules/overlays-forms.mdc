@@ -1,0 +1,100 @@
+---
+description: Sheets, Dialog, AlertDialog, Sonner toasts, profile menus, and Field forms
+globs: reactadmin/**/*.{tsx,ts,css}
+alwaysApply: false
+---
+
+# ReactAdmin Overlays & Forms
+
+shadcn/Radix UI. Lessons from hub (Add Contact / TopBar) and Acensure — patterns live in Veyra code.
+
+## Overlay roles
+
+| Pattern | Use for |
+| :--- | :--- |
+| **Sheet** (right) | Short create/edit. Header + scroll body + footer |
+| **Dialog** | Form / detail modals (non-blocking confirm style) |
+| **AlertDialog** | Destructive / blocking confirm (`ConfirmDialog` uses this) |
+| **Sonner** (`ShowToast`) | Success/error flash after actions — [docs](https://sonner.emilkowal.ski/getting-started) |
+| **Full page** | Multi-step wizards (order booking) |
+| **DropdownMenu** | Profile / account menu from avatar |
+
+## Toasts
+
+```tsx
+import { ShowToast } from '#/lib/toast'
+
+ShowToast.success('Shipment created', { description: id })
+ShowToast.error('Could not save')
+```
+
+Mount `<Toaster />` once in root (`__root.tsx`). Call toasts from handlers, not `useEffect`.
+
+## Profile menu
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>{/* avatar */}</DropdownMenuTrigger>
+  <DropdownMenuContent align="end" className="w-56">
+    <DropdownMenuLabel>…name + email…</DropdownMenuLabel>
+    <DropdownMenuItem>My profile → Sheet</DropdownMenuItem>
+    <DropdownMenuItem>Settings</DropdownMenuItem>
+    <DropdownMenuItem variant="destructive">Sign out</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## Button roles (follow primary colour)
+
+Primary token may change per tenant/brand; **roles stay fixed**:
+
+| Role | Meaning | `Button` variant |
+| :--- | :--- | :--- |
+| Positive / success | Submit, Create, Save, Confirm (happy path) | `default` (or `marine` alias) — **bg primary** |
+| Cancel / do nothing | Dismiss without saving | `secondary` — **muted grey** |
+| Secondary action | Alternate path (e.g. “Create and add another”) | `outline` — **primary border + primary text** |
+| Destructive | Delete / irreversible harm | `destructive` |
+
+```tsx
+<Button variant="secondary">Cancel</Button>
+<Button variant="outline">Create and add another</Button>
+<Button variant="default">Create shipment</Button>
+```
+
+Do not use outline for Cancel, or grey fill for the primary submit.
+
+## Forms
+
+- Layout: `Field` + `FieldLabel` + `Input`/`Select` + `FieldError`
+- Controls ~`h-11`, dense labels
+- Controlled Sheet: `open` / `onOpenChange`
+- Prefer **react-hook-form + Zod** for real API forms; demo sheets may use local state
+- Keep wrappers small under `components/ui` + `components/shared` — no Acensure `dev/core` god-file
+
+### Required labels (red asterisk)
+
+CSS in `styles.css`:
+
+```css
+label.required:after {
+  content: '*';
+  margin-left: 0.2rem;
+  color: var(--destructive);
+}
+```
+
+Usage:
+
+```tsx
+<FieldLabel htmlFor="ship-customer" required>
+  Customer
+</FieldLabel>
+{/* or */}
+<label className="required">Email</label>
+```
+
+Do not type `*` in the label text — use the `required` class / `FieldLabel required` prop.
+
+## Primitives
+
+`sheet`, `dialog`, `alert-dialog`, `sonner`, `dropdown-menu`, `field`, `input`, `select`, `confirm-dialog`.

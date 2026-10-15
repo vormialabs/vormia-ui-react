@@ -1,0 +1,36 @@
+---
+description: Prefer event handlers and TanStack Query over useEffect — ask before adding effects
+globs: reactadmin/**/*.{tsx,ts}
+alwaysApply: false
+---
+
+# Avoid `useEffect` (Veyra)
+
+Borrowed from Acensure’s developer guide. If you think you need `useEffect`, **ask the user first**.
+
+## Prefer instead
+
+| Goal | Do this |
+| :--- | :--- |
+| React to a click / submit / dialog close | Event handler |
+| Load server data | TanStack Query (when API exists) |
+| Derive UI from props/state | Compute during render (`useMemo` only if needed) |
+| Form defaults after load | `form.reset(...)` / defaultValues |
+| Read localStorage once | Lazy `useState(() => read…())` |
+| Write localStorage | Inside the same handler that changes state |
+| Flash feedback | `ShowToast` in the handler — not an effect |
+
+## Rare OK cases (still ask)
+
+- Subscribing to `window` / `matchMedia` / third-party widgets with cleanup
+- Syncing a non-React library (map, chart imperative API)
+
+## Bad smell
+
+```tsx
+// ❌ syncing state from other state
+useEffect(() => { setB(a + 1) }, [a])
+
+// ❌ fetch in effect when Query exists
+useEffect(() => { fetch(...).then(setData) }, [])
+```

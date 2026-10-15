@@ -1,0 +1,24 @@
+---
+description: Recharts dashboards and table primitives for Veyra admin
+globs: reactadmin/**/*.{tsx,ts,css}
+alwaysApply: false
+---
+
+# ReactAdmin Charts & Tables
+
+## Charts
+
+- Admin dashboards use **Recharts** (`ResponsiveContainer`, `LineChart`, `PieChart` donut).
+- Hub HomeDashboard visual recipe: KPI row → insights strip → line + donut → optional progress.
+- Token colors: `var(--foreground)`, `var(--teal)`, `var(--destructive)`, `var(--border)`, muted ticks.
+- Freight labels (shipments, clearance, warehouse) — not CRM invoices/contacts.
+- **Do not add ApexCharts** unless product explicitly requests it (hub screenshot was Recharts).
+
+Mock series: [`veyra-demo.ts`](../../reactadmin/src/lib/demo.ts). Dashboard UI: [`overview-dashboard.tsx`](../../reactadmin/src/components/admin/overview-dashboard.tsx).
+
+## Tables
+
+- Shared markup: `Table` / `TableHeader` / `TableBody` / `TableRow` / `TableHead` / `TableCell`
+- Uppercase muted column headers; link IDs to detail
+- **One stack only:** when server lists arrive, use **TanStack Table** — do not dual-build Acensure’s client `DataTable` + TanStack systems
+- List chrome (search/filters/Sheet CTA): see [list-workspace.mdc](./list-workspace.mdc)

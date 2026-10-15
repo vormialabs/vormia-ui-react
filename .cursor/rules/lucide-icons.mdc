@@ -1,0 +1,28 @@
+---
+description: Use Lucide icons for all UI affordances in ReactAdmin / Vormia kit
+globs: reactadmin/**/*.{tsx,ts,jsx}
+alwaysApply: false
+---
+
+# Lucide icons
+
+UI icons: **only** [Lucide](https://lucide.dev/icons/) via `lucide-react`.
+
+```tsx
+import { Search, Settings, SearchX, ShieldOff } from 'lucide-react'
+```
+
+## Do
+
+- Named imports from `lucide-react`
+- Match stroke to shell chrome (`currentColor` / CSS color on the SVG)
+- Status pages: `SearchX` (404), `ShieldOff` (403)
+
+## Do not
+
+- Use emoji as primary UI icons (buttons, nav, status cards)
+- Add another icon pack (Font Awesome, Heroicons, etc.)
+
+## Exception
+
+Language switcher country marks may stay regional-indicator **flag emoji** (product preference for ISO country glyphs).
