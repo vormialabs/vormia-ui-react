@@ -20,6 +20,11 @@ import {
 } from 'lucide-react'
 import { Brand } from '#/components/brand/Logo'
 import { OverviewDashboard } from '#/components/admin/overview-dashboard'
+import {
+  DashboardSkeleton,
+  SettingsSkeleton,
+  TablePageSkeleton,
+} from '#/components/admin/page-skeletons'
 import { ProfilePanel } from '#/components/admin/profile-panel'
 import {
   RecordFormSheet,
@@ -85,8 +90,16 @@ export function AdminPage() {
   const [profileOpen, setProfileOpen] = useState(false)
   const [recordSheetOpen, setRecordSheetOpen] = useState(false)
   const [rows, setRows] = useState<DemoRecord[]>(seedRecords)
+  /** Settings “Preview skeletons” — shows loading UI for the current view (~800ms). */
+  const [previewSkeletons, setPreviewSkeletons] = useState(false)
 
   const currentLocale = getLocale(locale)
+
+  const showSkeletonPreview = (nextView?: AdminView) => {
+    if (nextView) setView(nextView)
+    setPreviewSkeletons(true)
+    window.setTimeout(() => setPreviewSkeletons(false), 800)
+  }
 
   const filtered = rows.filter(
     (s) =>
@@ -328,7 +341,15 @@ export function AdminPage() {
               </div>
             ) : null}
 
-            {view === 'Dashboard' ? (
+            {previewSkeletons ? (
+              view === 'Dashboard' ? (
+                <DashboardSkeleton />
+              ) : view === 'Settings' ? (
+                <SettingsSkeleton />
+              ) : (
+                <TablePageSkeleton />
+              )
+            ) : view === 'Dashboard' ? (
               <OverviewDashboard
                 onNewRecord={() => setRecordSheetOpen(true)}
                 onViewRecords={() => setView('Records')}
@@ -393,6 +414,48 @@ export function AdminPage() {
                     </p>
                   ) : null}
                 </form>
+
+                <div className="mt-10 max-w-md border-t border-border pt-6">
+                  <h3 className="mb-2 font-semibold">Developer</h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    Preview page skeletons for the current view (~800ms). Switch
+                    views first, or pick one below.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => showSkeletonPreview()}
+                    >
+                      Preview skeletons
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => showSkeletonPreview('Dashboard')}
+                    >
+                      Dashboard
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => showSkeletonPreview('Records')}
+                    >
+                      Table
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => showSkeletonPreview('Settings')}
+                    >
+                      Settings
+                    </Button>
+                  </div>
+                </div>
               </section>
             ) : null}
 

@@ -46,7 +46,7 @@ Shell is locked to the viewport so the page itself does not scroll:
 - `.admin-nav` → `flex: 1`; `min-height: 0`; `overflow-y: auto` (long nav scrolls alone)
 - `.sidebar-bottom` → `margin-top: auto`; `flex-shrink: 0`; soft `border-top`; Settings + Not found (404 probe) + Forbidden + Logout
 - Language switcher lives in the top bar (before theme toggle), not in the sidebar
-- No register route; entry `/` redirects to `/login`
+- No register route; entry `/` is the kit landing (menu, hero, services, footer; Sign in → `/login`, Open admin → `/app`; other CTAs are samples)
 - Only `nav.admin-nav` gets `flex: 1` — never put `flex: 1` on `.sidebar-bottom` even if it reuses `.admin-nav` for button styles
 - `.admin-main` / `.admin-workspace` → `min-height: 0`; `overflow: hidden`
 - `.admin-content` → **only** scroll surface for dashboard content (`overflow-y: auto`)

@@ -1,0 +1,37 @@
+---
+description: Loading skeletons — primitive + page layouts while Query (or demo) is pending
+globs: admin-ui/**/*.{tsx,ts}, admin-ui/src/components/**/*
+alwaysApply: false
+---
+
+# Skeletons (Vormia Admin UI)
+
+Use pulse placeholders while data is loading. Prefer these over spinners or emoji loaders.
+
+## Primitive
+
+```tsx
+import { Skeleton } from '#/components/ui/skeleton'
+
+<Skeleton className="h-4 w-32" />
+```
+
+`animate-pulse` + `bg-muted` + `rounded-md` (shadcn-compatible).
+
+## Page layouts
+
+From `#/components/admin/page-skeletons`:
+
+| Component | Use when |
+| :--- | :--- |
+| `DashboardSkeleton` | Overview / KPI + charts pending |
+| `TablePageSkeleton` | Records / Inventory list pending |
+| `SettingsSkeleton` | Settings form pending |
+
+In product apps (e.g. Veyra), mirror lives at `#/components/veyra/page-skeletons`.
+
+## Wiring
+
+- Show the matching skeleton when TanStack Query `isPending` / `isLoading` for that view.
+- Kit demo: Settings → Developer → **Preview skeletons** (click handler + `setTimeout`, no `useEffect`).
+- Do not invent custom loader GIFs or emoji loading states.

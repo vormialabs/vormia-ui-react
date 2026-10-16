@@ -1,8 +1,7 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import { KitLanding } from '#/components/admin/kit-landing'
 
-/** App entry — send everyone to login. */
+/** Kit landing — menu, hero, services, sections, footer. */
 export const Route = createFileRoute('/')({
-  beforeLoad: () => {
-    throw redirect({ to: '/login' })
-  },
+  component: KitLanding,
 })

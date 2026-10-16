@@ -477,6 +477,10 @@
   margin-top: 55px;
   padding-bottom: 85px;
 }
+/* Kit landing — three layers (shell / auth / workspace) */
+.kit-workflow-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
 .workflow-step {
   border-top: 1px solid oklch(1 0 0 / 0.28);
   padding-top: 23px;
@@ -1612,3 +1616,4 @@ label.required:after {
   color: var(--muted-foreground);
   margin: 0;
 }
+

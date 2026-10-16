@@ -25,8 +25,9 @@ Distilled from former `vormia-your-customer-hub` Contacts / settings shells. Use
 - Primary CTA: high-contrast `foreground` on light (hub used black button); use Veyra primary/marine when product CTA is stronger.
 - Dense but readable: ~12–13px controls, generous workspace padding (~24px), tight toolbar gaps.
 - Tables: shared `ui/table` primitives; charts/dashboards: [charts-tables.mdc](./charts-tables.mdc).
+- While list Query is pending: `TablePageSkeleton` from [skeletons.mdc](./skeletons.mdc) — not spinners or emoji.
 
-## Example skeleton
+## Example layout
 
 ```tsx
 <div className="admin-content">
